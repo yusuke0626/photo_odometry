@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.8.3)
 project(photo_odometry)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
-add_compile_options(-std=c++17 -pthread)
+add_compile_options(-std=c++11 -pthread)
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
@@ -52,11 +52,10 @@ add_message_files(
 )
 
 ## Generate services in the 'srv' folder
-# add_service_files(
-#   FILES
-#   Service1.srv
-#   Service2.srv
-# )
+add_service_files(
+  FILES
+  cam_operator.srv
+)
 
 ## Generate actions in the 'action' folder
 # add_action_files(

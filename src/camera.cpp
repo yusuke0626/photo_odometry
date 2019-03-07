@@ -6,6 +6,7 @@
 #include <opencv2/opencv.hpp>
 #include <ros/ros.h>
 #include <photo_odometry/camera.h>
+#include <photo_odometry/cam_operator.h>
 
 #define GET_RANGE 300
 #define X_ORIGIN 0
@@ -18,32 +19,49 @@
 using namespace cv;
 using namespace std;
 
-photo_odometry::camera msg;
+short c_range[6] = {0, 0, 0, 0, 0, 0};
+
+int x_max_area = 0;
+
+bool color_range_select(void);
+
+bool send_response(photo_odometry::cam_operator::Request &cam_req, photo_odometry::cam_operator::Response &cam_res)
+{
+    cam_res.x_diff = x_max_area;
+    ROS_INFO("request: %d   response: %d \n", cam_req.sign, cam_res.x_diff);
+    return true;
+}
 
 int main(int argc, char **argv)
 {
     ros::init(argc, argv, "camera_info");
     ros::NodeHandle nh;
 
-    ros::Publisher ros_camera_pub = nh.advertise<photo_odometry::camera>("camera", 1000);
+    ros::Publisher ros_camera_pub = nh.advertise<photo_odometry::camera>("cam_msg", 1000);
+    ros::ServiceServer ros_camera_srv = nh.advertiseService("cam_srv", send_response);
     ros::Rate loop_rate(30);
+
+    photo_odometry::camera msg;
+    photo_odometry::cam_operator srv;
 
     bool range_flag = false;
     bool flag = false;
-
-    unsigned short int a = 10;
-    unsigned short int b = 100;
-    unsigned short int c = 100;
-    unsigned short int d = 40;
-    unsigned short int e = 255;
-    unsigned short int f = 255;
 
     int av_count = 0;
     long int sum_A = 0;
     long int sum_B = 0;
     long int sum_C = 0;
     int average[3] = {};
+
+    bool mode_sel = 1;
+
     Mat rec;
+
+    cout << "adjust color 0, not 1" << endl;
+    cin >> mode_sel;
+
+    if (mode_sel == 0)
+        color_range_select();
 
     VideoCapture cap(1);
     if (!cap.isOpened())
@@ -56,84 +74,10 @@ int main(int argc, char **argv)
         cout << "Open Successful" << endl;
     }
 
-    while (ros::ok())
-    {
-        Mat img;
-        Mat frame;
-        Mat hsv;
-        cap >> img;
-        cap >> frame;
-        Mat rsi(img, Rect(X_ORIGIN, Y_ORIGIN, X_SIZE, Y_SIZE));
-        resize(rsi, rsi, Size(FRAME_X_SIZE, FRAME_Y_SIZE));
-        imshow("img", rsi);
-
-        int key = waitKey(50);
-        bool swflag = false;
-
-        switch (key)
-        {
-        case 113:
-            a = a + 5;
-            break;
-        case 97:
-            a = a - 3;
-            break;
-        case 119:
-            b = b + 5;
-            break;
-        case 115:
-            b = b - 3;
-            break;
-        case 101:
-            c = c + 5;
-            break;
-        case 100:
-            c = c - 3;
-            break;
-        case 117:
-            d = d - 5;
-            break;
-        case 106:
-            d = d + 3;
-            break;
-        case 105:
-            e = e - 5;
-            break;
-        case 107:
-            e = e + 3;
-            break;
-        case 111:
-            f = f - 5;
-            break;
-        case 108:
-            f = f + 3;
-            break;
-        case 122:
-            swflag = true;
-            break;
-        }
-
-        if (swflag == true)
-        {
-            break;
-        }
-        printf("(%d,%d,%d)\n", a, b, c);
-        printf("(%d,%d,%d)\n", d, e, f);
-        Mat dst(frame, Rect(X_ORIGIN, Y_ORIGIN, X_SIZE, Y_SIZE));
-        resize(dst, dst, Size(FRAME_X_SIZE, FRAME_Y_SIZE));
-        cvtColor(dst, hsv, COLOR_BGR2HSV);
-        inRange(hsv, Scalar(a, b, c), Scalar(d, e, f), frame);
-        erode(frame, frame, Mat(), Point(-1, -1), 3);
-        dilate(frame, frame, Mat(), Point(-1, -1), 5);
-        imshow("binary img", frame);
-    }
-
-    destroyAllWindows();
     cout << "*---------Main Start---------*" << endl;
 
     while (true)
     {
-        cout << "aaa"<< endl;
         Mat mainframe;
         Mat mainhsv;
         int stopkey = waitKey(50);
@@ -143,12 +87,11 @@ int main(int argc, char **argv)
 
         if (flag == false)
         {
-            cout << "bbb" <<endl;
             cap >> mainframe;
             Mat maindst(mainframe, Rect(X_ORIGIN, Y_ORIGIN, X_SIZE, Y_SIZE));
             resize(maindst, maindst, Size(FRAME_X_SIZE, FRAME_Y_SIZE));
             cvtColor(maindst, mainhsv, COLOR_BGR2HSV);
-            inRange(mainhsv, Scalar(a, b, c), Scalar(d, e, f), maindst);
+            inRange(mainhsv, Scalar(c_range[0], c_range[1], c_range[2]), Scalar(c_range[3], c_range[4], c_range[5]), maindst);
             erode(maindst, maindst, Mat(), Point(-1, -1), 3);
             dilate(maindst, maindst, Mat(), Point(-1, -1), 5);
 
@@ -192,12 +135,10 @@ int main(int argc, char **argv)
             int x_object;
             int y_object;
 
-            int x_max_area = 0;
             int y_max_area = 0;
             int max_area = 0;
             int current_area = 0;
 
-            int obcount = 0;
             //座標
             for (int i = 1; i < nLab; ++i)
             {
@@ -206,18 +147,19 @@ int main(int argc, char **argv)
                 {
                     x_object = param[cv::ConnectedComponentsTypes::CC_STAT_LEFT];
                     y_object = param[cv::ConnectedComponentsTypes::CC_STAT_TOP];
-                    current_area = param[cv::ConnectedComponentsTypes::CC_STAT_AREA]; 
+                    current_area = param[cv::ConnectedComponentsTypes::CC_STAT_AREA];
                     int height = param[cv::ConnectedComponentsTypes::CC_STAT_HEIGHT];
                     int width = param[cv::ConnectedComponentsTypes::CC_STAT_WIDTH];
                     rectangle(Dst, Rect(x_object, y_object, width, height), Scalar(0, 255, 0), 2);
                     stringstream obj;
                     obj << i;
                     putText(Dst, obj.str(), Point(x_object + 5, y_object + 20), FONT_HERSHEY_COMPLEX, 0.7, Scalar(0, 255, 255), 2);
-                    if(max_area < current_area){
+                    if (max_area < current_area)
+                    {
                         max_area = current_area;
                         x_max_area = x_object;
                         y_max_area = y_object;
-                    } 
+                    }
                 }
             }
 
@@ -225,7 +167,7 @@ int main(int argc, char **argv)
             msg.y = y_max_area;
 
             ros_camera_pub.publish(msg);
-        
+
             imshow("Data", Dst);
         }
         ros::spinOnce();
@@ -233,4 +175,92 @@ int main(int argc, char **argv)
     }
     cout << "*----------Main finish-----------*" << endl;
     return 0;
+}
+
+bool color_range_select(void)
+{
+    VideoCapture cap(1);
+    if (!cap.isOpened())
+    {
+        cout << "Not Opened" << endl;
+        return -1;
+    }
+    else
+    {
+        cout << "Open Successful" << endl;
+    }
+
+    while (ros::ok())
+    {
+        Mat img;
+        Mat frame;
+        Mat hsv;
+        cap >> img;
+        cap >> frame;
+        Mat rsi(img, Rect(X_ORIGIN, Y_ORIGIN, X_SIZE, Y_SIZE));
+        resize(rsi, rsi, Size(FRAME_X_SIZE, FRAME_Y_SIZE));
+        imshow("img", rsi);
+
+        int key = waitKey(50);
+        bool swflag = false;
+
+        switch (key)
+        {
+        case 113:
+            c_range[0] = c_range[0] + 5;
+            break;
+        case 97:
+            c_range[0] = c_range[0] - 3;
+            break;
+        case 119:
+            c_range[1] = c_range[1] + 5;
+            break;
+        case 115:
+            c_range[1] = c_range[1] - 3;
+            break;
+        case 101:
+            c_range[2] = c_range[2] + 5;
+            break;
+        case 100:
+            c_range[2] = c_range[2] - 3;
+            break;
+        case 117:
+            c_range[3] = c_range[3] - 5;
+            break;
+        case 106:
+            c_range[3] = c_range[3] + 3;
+            break;
+        case 105:
+            c_range[4] = c_range[4] - 5;
+            break;
+        case 107:
+            c_range[4] = c_range[4] + 3;
+            break;
+        case 111:
+            c_range[5] = c_range[5] - 5;
+            break;
+        case 108:
+            c_range[5] = c_range[5] + 3;
+            break;
+        case 122:
+            swflag = true;
+            break;
+        }
+
+        if (swflag == true)
+        {
+            break;
+        }
+        printf("(%d,%d,%d)\n", c_range[0], c_range[1], c_range[2]);
+        printf("(%d,%d,%d)\n", c_range[3], c_range[4], c_range[5]);
+        Mat dst(frame, Rect(X_ORIGIN, Y_ORIGIN, X_SIZE, Y_SIZE));
+        resize(dst, dst, Size(FRAME_X_SIZE, FRAME_Y_SIZE));
+        cvtColor(dst, hsv, COLOR_BGR2HSV);
+        inRange(hsv, Scalar(c_range[0], c_range[1], c_range[2]), Scalar(c_range[3], c_range[4], c_range[5]), frame);
+        erode(frame, frame, Mat(), Point(-1, -1), 3);
+        dilate(frame, frame, Mat(), Point(-1, -1), 5);
+        imshow("binary img", frame);
+    }
+    destroyAllWindows();
+    return true;
 }
