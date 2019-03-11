@@ -1,6 +1,5 @@
 #include <cstdio>
 #include <iostream>
-//#include <random>
 #include <sstream>
 #include <vector>
 #include <opencv2/opencv.hpp>
@@ -15,18 +14,20 @@
 #define Y_SIZE 300
 #define FRAME_X_SIZE 500
 #define FRAME_Y_SIZE 300
-
+//0 off,1 petbottle RED, ,2 petbottle BLUE ,feed 3
 using namespace cv;
 using namespace std;
 
 short c_range[6] = {10, 90, 130, 35, 250, 210};
-
+//short red_range[6]  = {,,,,,}
+//short blue_range[6] = {,,,,,}
+short mode = 0;
 int x_center;
-
 bool color_range_select(void);
 
 bool send_response(photo_odometry::cam_operator::Request &cam_req, photo_odometry::cam_operator::Response &cam_res)
 {
+    mode = cam_req.sign;
     cam_res.x_diff = x_center;
     ROS_INFO("request: %d   response: %d \n", cam_req.sign, cam_res.x_diff);
     return true;
@@ -91,6 +92,41 @@ int main(int argc, char **argv)
             Mat maindst(mainframe, Rect(X_ORIGIN, Y_ORIGIN, X_SIZE, Y_SIZE));
             resize(maindst, maindst, Size(FRAME_X_SIZE, FRAME_Y_SIZE));
             cvtColor(maindst, mainhsv, COLOR_BGR2HSV);
+            switch (mode)
+            {
+                case 0:
+                    c_range[0] = 0;
+                    c_range[1] = 0;
+                    c_range[2] = 0;
+                    c_range[3] = 0;
+                    c_range[4] = 0;
+                    c_range[5] = 0;
+                    break;
+                case 1: // red 
+                    c_range[0] = 0;
+                    c_range[1] = 40;
+                    c_range[2] = 80;
+                    c_range[3] = 10;
+                    c_range[4] = 255;
+                    c_range[5] = 255;
+                    break;
+                case 2: // 
+                    c_range[0] = 105;
+                    c_range[1] = 117;
+                    c_range[2] = 60;
+                    c_range[3] = 120;
+                    c_range[4] = 250;
+                    c_range[5] = 220;
+                    break;
+                case 3: // bottle
+                    c_range[0] = 20;
+                    c_range[1] = 35;
+                    c_range[2] = 90;
+                    c_range[3] = 250;
+                    c_range[4] = 130;
+                    c_range[5] = 230;
+                    break;
+            }
             inRange(mainhsv, Scalar(c_range[0], c_range[1], c_range[2]), Scalar(c_range[3], c_range[4], c_range[5]), maindst);
             erode(maindst, maindst, Mat(), Point(-1, -1), 3);
             dilate(maindst, maindst, Mat(), Point(-1, -1), 5);
@@ -106,7 +142,7 @@ int main(int argc, char **argv)
             colors[0] = Vec3b(0, 0, 0);
             for (int i = 1; i < nLab; ++i)
             {
-                colors[i] = Vec3b(i * 50, 200 ,200); //色をランダムで決定する（255で範囲指定しないといけないからビット演算）
+                colors[i] = Vec3b(i * 50, 200, 200); //色をランダムで決定する（255で範囲指定しないといけないからビット演算）
             }
 
             //描画
@@ -150,7 +186,7 @@ int main(int argc, char **argv)
                     current_area = param[cv::ConnectedComponentsTypes::CC_STAT_AREA];
                     int height = param[cv::ConnectedComponentsTypes::CC_STAT_HEIGHT];
                     int width = param[cv::ConnectedComponentsTypes::CC_STAT_WIDTH];
-                     
+
                     rectangle(Dst, Rect(x_object, y_object, width, height), Scalar(0, 255, 0), 2);
                     stringstream obj;
                     obj << i;
