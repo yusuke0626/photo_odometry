@@ -21,13 +21,13 @@ using namespace std;
 
 short c_range[6] = {10, 90, 130, 35, 250, 210};
 
-int x_max_area = 0;
+int x_center;
 
 bool color_range_select(void);
 
 bool send_response(photo_odometry::cam_operator::Request &cam_req, photo_odometry::cam_operator::Response &cam_res)
 {
-    cam_res.x_diff = x_max_area;
+    cam_res.x_diff = x_center;
     ROS_INFO("request: %d   response: %d \n", cam_req.sign, cam_res.x_diff);
     return true;
 }
@@ -150,6 +150,7 @@ int main(int argc, char **argv)
                     current_area = param[cv::ConnectedComponentsTypes::CC_STAT_AREA];
                     int height = param[cv::ConnectedComponentsTypes::CC_STAT_HEIGHT];
                     int width = param[cv::ConnectedComponentsTypes::CC_STAT_WIDTH];
+                     
                     rectangle(Dst, Rect(x_object, y_object, width, height), Scalar(0, 255, 0), 2);
                     stringstream obj;
                     obj << i;
@@ -157,13 +158,13 @@ int main(int argc, char **argv)
                     if (max_area < current_area)
                     {
                         max_area = current_area;
-                        x_max_area = x_object;
+                        x_center = (x_object + width) / 2;
                         y_max_area = y_object;
                     }
                 }
             }
 
-            msg.x = x_max_area - 250;
+            msg.x = x_center - 250;
             msg.y = y_max_area - 250;
 
             ros_camera_pub.publish(msg);
