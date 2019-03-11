@@ -19,8 +19,7 @@ using namespace cv;
 using namespace std;
 
 short c_range[6] = {10, 90, 130, 35, 250, 210};
-//short red_range[6]  = {,,,,,}
-//short blue_range[6] = {,,,,,}
+
 short mode = 0;
 int x_center;
 bool color_range_select(void);
@@ -129,7 +128,7 @@ int main(int argc, char **argv)
             }
             inRange(mainhsv, Scalar(c_range[0], c_range[1], c_range[2]), Scalar(c_range[3], c_range[4], c_range[5]), maindst);
             erode(maindst, maindst, Mat(), Point(-1, -1), 3);
-            dilate(maindst, maindst, Mat(), Point(-1, -1), 5);
+            dilate(maindst, maindst, Mat(), Point(-1, -1), 6);
 
             //ラべリング
             Mat LabelImg;
@@ -295,7 +294,7 @@ bool color_range_select(void)
         cvtColor(dst, hsv, COLOR_BGR2HSV);
         inRange(hsv, Scalar(c_range[0], c_range[1], c_range[2]), Scalar(c_range[3], c_range[4], c_range[5]), frame);
         erode(frame, frame, Mat(), Point(-1, -1), 3);
-        dilate(frame, frame, Mat(), Point(-1, -1), 5);
+        dilate(frame, frame, Mat(), Point(-1, -1), 6);
         imshow("binary img", frame);
     }
     destroyAllWindows();
