@@ -1,6 +1,6 @@
 #include <cstdio>
 #include <iostream>
-#include <random>
+//#include <random>
 #include <sstream>
 #include <vector>
 #include <opencv2/opencv.hpp>
@@ -9,7 +9,7 @@
 #include <photo_odometry/cam_operator.h>
 
 #define GET_RANGE 300
-#define X_ORIGIN 0
+#define X_ORIGIN 16
 #define Y_ORIGIN 0
 #define X_SIZE 500
 #define Y_SIZE 300
@@ -106,7 +106,7 @@ int main(int argc, char **argv)
             colors[0] = Vec3b(0, 0, 0);
             for (int i = 1; i < nLab; ++i)
             {
-                colors[i] = Vec3b((rand() & 255), (rand() & 255), (rand() & 255)); //色をランダムで決定する（255で範囲指定しないといけないからビット演算）
+                colors[i] = Vec3b(i * 50, 200 ,200); //色をランダムで決定する（255で範囲指定しないといけないからビット演算）
             }
 
             //描画
@@ -163,8 +163,8 @@ int main(int argc, char **argv)
                 }
             }
 
-            msg.x = x_max_area;
-            msg.y = y_max_area;
+            msg.x = x_max_area - 250;
+            msg.y = y_max_area - 250;
 
             ros_camera_pub.publish(msg);
 
