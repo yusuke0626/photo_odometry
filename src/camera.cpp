@@ -19,7 +19,7 @@
 using namespace cv;
 using namespace std;
 
-short c_range[6] = {0, 0, 0, 0, 0, 0};
+short c_range[6] = {10, 90, 130, 35, 250, 210};
 
 int x_max_area = 0;
 
