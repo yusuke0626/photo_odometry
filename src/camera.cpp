@@ -44,7 +44,7 @@ int main(int argc, char **argv)
     photo_odometry::camera msg;
     photo_odometry::cam_operator srv;
 
-    bool range_flag = false;
+//    bool mode_flag = 0;
     bool flag = false;
 
     int av_count = 0;
@@ -109,7 +109,7 @@ int main(int argc, char **argv)
                     c_range[4] = 255;
                     c_range[5] = 255;
                     break;
-                case 2: // 
+                case 2: // blue
                     c_range[0] = 105;
                     c_range[1] = 117;
                     c_range[2] = 60;
@@ -125,6 +125,20 @@ int main(int argc, char **argv)
                     c_range[4] = 130;
                     c_range[5] = 230;
                     break;
+                case 4:
+                    c_range[0] = 0;
+                    c_range[1] = 40;
+                    c_range[2] = 80;
+                    c_range[3] = 10;
+                    c_range[4] = 255;
+                    c_range[5] = 255;
+                case 5:
+                    c_range[0] = 105;
+                    c_range[1] = 117;
+                    c_range[2] = 60;
+                    c_range[3] = 120;
+                    c_range[4] = 250;
+                    c_range[5] = 220;
             }
             inRange(mainhsv, Scalar(c_range[0], c_range[1], c_range[2]), Scalar(c_range[3], c_range[4], c_range[5]), maindst);
             erode(maindst, maindst, Mat(), Point(-1, -1), 3);
@@ -174,6 +188,9 @@ int main(int argc, char **argv)
             int max_area = 0;
             int current_area = 0;
 
+            int ob_two[4] = {0,0,0,0};
+            int wit_two[4] = {0,0,0,0};
+            int hei_two[4] = {0,0,0,0};
             //座標
             for (int i = 1; i < nLab; ++i)
             {
@@ -182,6 +199,8 @@ int main(int argc, char **argv)
                 {
                     x_object = param[cv::ConnectedComponentsTypes::CC_STAT_LEFT];
                     y_object = param[cv::ConnectedComponentsTypes::CC_STAT_TOP];
+                    ob_two[i] = param[cv::ConnectedComponentsTypes::CC_STAT_LEFT];
+                    wit_two[i] = param[cv::ConnectedComponentsTypes::CC_STAT_WIDTH];
                     current_area = param[cv::ConnectedComponentsTypes::CC_STAT_AREA];
                     int height = param[cv::ConnectedComponentsTypes::CC_STAT_HEIGHT];
                     int width = param[cv::ConnectedComponentsTypes::CC_STAT_WIDTH];
@@ -199,8 +218,20 @@ int main(int argc, char **argv)
                 }
             }
 
-            msg.x = x_center - 250;
-            msg.y = y_max_area - 250;
+            int center_two[4] = {0,0,0,0};
+
+            center_two[1] = ((ob_two[1] + wit_two[1]) / 2);
+            center_two[0] = ((ob_two[0] + wit_two[0]) / 2);
+
+                
+            if(mode == 4 || mode == 5){
+                msg.x = (X_SIZE - center_two[1]) - center_two[0];
+                msg.y = y_object;
+            }else{
+                msg.x = x_center - 250;
+                msg.y = y_max_area - 250;
+            }    
+            
 
             ros_camera_pub.publish(msg);
 
