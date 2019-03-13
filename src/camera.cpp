@@ -155,7 +155,7 @@ int main(int argc, char **argv)
             colors[0] = Vec3b(0, 0, 0);
             for (int i = 1; i < nLab; ++i)
             {
-                colors[i] = Vec3b(i * 50, 200, 200); //色をランダムで決定する（255で範囲指定しないといけないからビット演算）
+                colors[i] = Vec3b(i % 6 * 50,i % 6 * 50, i % 6 * 50); 
             }
 
             //描画
@@ -223,9 +223,15 @@ int main(int argc, char **argv)
             center_two[1] = ((ob_two[1] + wit_two[1]) / 2);
             center_two[0] = ((ob_two[0] + wit_two[0]) / 2);
 
+            if(center_two[0] > center[1]){
+                int insted = center_two[1];
+                center_two[1] = center_two[0];
+                center_two[0] = insted;
+            }
+
                 
             if(mode == 4 || mode == 5){
-                msg.x = (X_SIZE - center_two[1]) - center_two[0];
+                msg.x = -1 * ((X_SIZE - center_two[1]) - center_two[0]);
                 msg.y = y_object;
             }else{
                 msg.x = x_center - 250;
