@@ -223,7 +223,7 @@ int main(int argc, char **argv)
             center_two[1] = ((ob_two[1] + wit_two[1]) / 2);
             center_two[0] = ((ob_two[0] + wit_two[0]) / 2);
 
-            if(center_two[0] > center[1]){
+            if(center_two[0] > center_two[1]){
                 int insted = center_two[1];
                 center_two[1] = center_two[0];
                 center_two[0] = insted;
