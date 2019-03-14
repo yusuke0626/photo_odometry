@@ -44,7 +44,7 @@ int main(int argc, char **argv)
     photo_odometry::camera msg;
     photo_odometry::cam_operator srv;
 
-//    bool mode_flag = 0;
+
     bool flag = false;
 
     int av_count = 0;
@@ -62,6 +62,7 @@ int main(int argc, char **argv)
 
     if (mode_sel == 0)
         color_range_select();
+
 
     VideoCapture cap(1);
     if (!cap.isOpened())
@@ -81,7 +82,6 @@ int main(int argc, char **argv)
         Mat mainframe;
         Mat mainhsv;
         int stopkey = waitKey(50);
-        //bool red_flag = false;
 
         if (stopkey == 97)
             break;
@@ -92,7 +92,7 @@ int main(int argc, char **argv)
             Mat maindst(mainframe, Rect(X_ORIGIN, Y_ORIGIN, X_SIZE, Y_SIZE));
             resize(maindst, maindst, Size(FRAME_X_SIZE, FRAME_Y_SIZE));
             cvtColor(maindst, mainhsv, COLOR_BGR2HSV);
-            mode = 1;
+            mode = 2;
             switch (mode)
             {
                 case 0:
@@ -104,12 +104,12 @@ int main(int argc, char **argv)
                     c_range[5] = 0;
                     break;
                 case 1: // red
-                    c_range[0] = 40;
-                    c_range[1] = 130;
-                    c_range[2] = 25;
-                    c_range[3] = 80;
-                    c_range[4] = 196;
-                    c_range[5] = 90;
+                    c_range[0] = 0;
+                    c_range[1] = 150;
+                    c_range[2] = 100;
+                    c_range[3] = 15;
+                    c_range[4] = 255;
+                    c_range[5] = 255;
                     break;
                 case 2: // blue
                     c_range[0] = 105;
@@ -128,22 +128,19 @@ int main(int argc, char **argv)
                     c_range[5] = 230;
                     break;
                 case 4:
-                    c_range[0] = 40;
-                    c_range[1] = 130;
-                    c_range[2] = 25;
-                    c_range[3] = 80;
+                    c_range[0] = 0;
+                    c_range[1] = 150;
+                    c_range[2] = 100;
+                    c_range[3] = 15;
                     c_range[4] = 255;
                     c_range[5] = 255;
                 case 5:
                     c_range[0] = 105;
-                    c_range[1] = 117;
-                    c_range[2] = 60;
-                    c_range[3] = 120;
-                    c_range[4] = 250;
-                    c_range[5] = 220;
-            }
-            if( mode == 2 || mode == 4){
-                mainhsv = ~mainhsv;
+                    c_range[1] = 130;
+                    c_range[2] = 25;
+                    c_range[3] = 130;
+                    c_range[4] = 255;
+                    c_range[5] = 255;
             }
 
             inRange(mainhsv, Scalar(c_range[0], c_range[1], c_range[2]), Scalar(c_range[3], c_range[4], c_range[5]), maindst);
@@ -338,12 +335,8 @@ bool color_range_select(void)
         printf("(%d,%d,%d)\n", c_range[0], c_range[1], c_range[2]);
         printf("(%d,%d,%d)\n", c_range[3], c_range[4], c_range[5]);
         Mat dst(frame, Rect(X_ORIGIN, Y_ORIGIN, X_SIZE, Y_SIZE));
-        if(red_m == true){
-           dst =~dst;
-        }
         resize(dst, dst, Size(FRAME_X_SIZE, FRAME_Y_SIZE));
         cvtColor(dst, hsv, COLOR_BGR2HSV);
-        
         imshow("aaa",hsv);
         inRange(hsv, Scalar(c_range[0], c_range[1], c_range[2]), Scalar(c_range[3], c_range[4], c_range[5]), frame);
         erode(frame, frame, Mat(), Point(-1, -1), 3);
