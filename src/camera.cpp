@@ -7,8 +7,8 @@
 #include <photo_odometry/camera.h>
 #include <photo_odometry/cam_operator.h>
 
-#define GET_RANGE 300
-#define X_ORIGIN 16
+#define GET_RANGE 2500
+#define X_ORIGIN 40
 #define Y_ORIGIN 0
 #define X_SIZE 500
 #define Y_SIZE 300
@@ -81,6 +81,7 @@ int main(int argc, char **argv)
         Mat mainframe;
         Mat mainhsv;
         int stopkey = waitKey(50);
+        //bool red_flag = false;
 
         if (stopkey == 97)
             break;
@@ -91,6 +92,7 @@ int main(int argc, char **argv)
             Mat maindst(mainframe, Rect(X_ORIGIN, Y_ORIGIN, X_SIZE, Y_SIZE));
             resize(maindst, maindst, Size(FRAME_X_SIZE, FRAME_Y_SIZE));
             cvtColor(maindst, mainhsv, COLOR_BGR2HSV);
+            mode = 1;
             switch (mode)
             {
                 case 0:
@@ -101,35 +103,35 @@ int main(int argc, char **argv)
                     c_range[4] = 0;
                     c_range[5] = 0;
                     break;
-                case 1: // red 
-                    c_range[0] = 0;
-                    c_range[1] = 40;
-                    c_range[2] = 80;
-                    c_range[3] = 10;
-                    c_range[4] = 255;
-                    c_range[5] = 255;
+                case 1: // red
+                    c_range[0] = 40;
+                    c_range[1] = 130;
+                    c_range[2] = 25;
+                    c_range[3] = 80;
+                    c_range[4] = 196;
+                    c_range[5] = 90;
                     break;
                 case 2: // blue
                     c_range[0] = 105;
-                    c_range[1] = 117;
-                    c_range[2] = 60;
-                    c_range[3] = 120;
-                    c_range[4] = 250;
-                    c_range[5] = 220;
+                    c_range[1] = 130;
+                    c_range[2] = 25;
+                    c_range[3] = 130;
+                    c_range[4] = 255;
+                    c_range[5] = 255;
                     break;
                 case 3: // bottle
                     c_range[0] = 20;
                     c_range[1] = 35;
                     c_range[2] = 90;
-                    c_range[3] = 250;
+                    c_range[3] = 180;
                     c_range[4] = 130;
                     c_range[5] = 230;
                     break;
                 case 4:
-                    c_range[0] = 0;
-                    c_range[1] = 40;
-                    c_range[2] = 80;
-                    c_range[3] = 10;
+                    c_range[0] = 40;
+                    c_range[1] = 130;
+                    c_range[2] = 25;
+                    c_range[3] = 80;
                     c_range[4] = 255;
                     c_range[5] = 255;
                 case 5:
@@ -140,9 +142,13 @@ int main(int argc, char **argv)
                     c_range[4] = 250;
                     c_range[5] = 220;
             }
+            if( mode == 2 || mode == 4){
+                mainhsv = ~mainhsv;
+            }
+
             inRange(mainhsv, Scalar(c_range[0], c_range[1], c_range[2]), Scalar(c_range[3], c_range[4], c_range[5]), maindst);
             erode(maindst, maindst, Mat(), Point(-1, -1), 3);
-            dilate(maindst, maindst, Mat(), Point(-1, -1), 6);
+            dilate(maindst, maindst, Mat(), Point(-1, -1), 5);
 
             //ラべリング
             Mat LabelImg;
@@ -155,7 +161,7 @@ int main(int argc, char **argv)
             colors[0] = Vec3b(0, 0, 0);
             for (int i = 1; i < nLab; ++i)
             {
-                colors[i] = Vec3b(i % 6 * 50,i % 6 * 50, i % 6 * 50); 
+                colors[i] = Vec3b(250,250,50); 
             }
 
             //描画
@@ -191,6 +197,7 @@ int main(int argc, char **argv)
             int ob_two[4] = {0,0,0,0};
             int wit_two[4] = {0,0,0,0};
             int hei_two[4] = {0,0,0,0};
+            int q = 0;
             //座標
             for (int i = 1; i < nLab; ++i)
             {
@@ -199,15 +206,15 @@ int main(int argc, char **argv)
                 {
                     x_object = param[cv::ConnectedComponentsTypes::CC_STAT_LEFT];
                     y_object = param[cv::ConnectedComponentsTypes::CC_STAT_TOP];
-                    ob_two[i] = param[cv::ConnectedComponentsTypes::CC_STAT_LEFT];
-                    wit_two[i] = param[cv::ConnectedComponentsTypes::CC_STAT_WIDTH];
+                    ob_two[q] = param[cv::ConnectedComponentsTypes::CC_STAT_LEFT];
+                    wit_two[q] = param[cv::ConnectedComponentsTypes::CC_STAT_WIDTH];
                     current_area = param[cv::ConnectedComponentsTypes::CC_STAT_AREA];
                     int height = param[cv::ConnectedComponentsTypes::CC_STAT_HEIGHT];
                     int width = param[cv::ConnectedComponentsTypes::CC_STAT_WIDTH];
 
                     rectangle(Dst, Rect(x_object, y_object, width, height), Scalar(0, 255, 0), 2);
                     stringstream obj;
-                    obj << i;
+                    obj << q;
                     putText(Dst, obj.str(), Point(x_object + 5, y_object + 20), FONT_HERSHEY_COMPLEX, 0.7, Scalar(0, 255, 255), 2);
                     if (max_area < current_area)
                     {
@@ -215,6 +222,7 @@ int main(int argc, char **argv)
                         x_center = (x_object + width) / 2;
                         y_max_area = y_object;
                     }
+                    q++;
                 }
             }
 
@@ -245,6 +253,7 @@ int main(int argc, char **argv)
         }
         ros::spinOnce();
         loop_rate.sleep();
+        imshow("before",mainhsv);
     }
     cout << "*----------Main finish-----------*" << endl;
     return 0;
@@ -262,7 +271,8 @@ bool color_range_select(void)
     {
         cout << "Open Successful" << endl;
     }
-
+    bool red_m = 0;
+    cin >> red_m;
     while (ros::ok())
     {
         Mat img;
@@ -270,9 +280,10 @@ bool color_range_select(void)
         Mat hsv;
         cap >> img;
         cap >> frame;
+
         Mat rsi(img, Rect(X_ORIGIN, Y_ORIGIN, X_SIZE, Y_SIZE));
         resize(rsi, rsi, Size(FRAME_X_SIZE, FRAME_Y_SIZE));
-        imshow("img", rsi);
+        //imshow("img", rsi);
 
         int key = waitKey(50);
         bool swflag = false;
@@ -327,11 +338,16 @@ bool color_range_select(void)
         printf("(%d,%d,%d)\n", c_range[0], c_range[1], c_range[2]);
         printf("(%d,%d,%d)\n", c_range[3], c_range[4], c_range[5]);
         Mat dst(frame, Rect(X_ORIGIN, Y_ORIGIN, X_SIZE, Y_SIZE));
+        if(red_m == true){
+           dst =~dst;
+        }
         resize(dst, dst, Size(FRAME_X_SIZE, FRAME_Y_SIZE));
         cvtColor(dst, hsv, COLOR_BGR2HSV);
+        
+        imshow("aaa",hsv);
         inRange(hsv, Scalar(c_range[0], c_range[1], c_range[2]), Scalar(c_range[3], c_range[4], c_range[5]), frame);
         erode(frame, frame, Mat(), Point(-1, -1), 3);
-        dilate(frame, frame, Mat(), Point(-1, -1), 6);
+        dilate(frame, frame, Mat(), Point(-1, -1), 5);
         imshow("binary img", frame);
     }
     destroyAllWindows();
