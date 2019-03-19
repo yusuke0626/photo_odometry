@@ -160,7 +160,7 @@ int main(int argc, char **argv)
             colors[0] = Vec3b(0, 0, 0);
             for (int i = 1; i < nLab; ++i)
             {
-                colors[i] = Vec3b(250,250,50); 
+                colors[i] = Vec3b(250,250,50);
             }
 
             //描画
@@ -197,6 +197,10 @@ int main(int argc, char **argv)
             int wit_two[4] = {0,0,0,0};
             int hei_two[4] = {0,0,0,0};
             int q = 0;
+
+            bool binary_flag = true;
+            bool noise_flag = false;
+            //bool error_flag  = false;
             //座標
             for (int i = 1; i < nLab; ++i)
             {
@@ -223,6 +227,12 @@ int main(int argc, char **argv)
                     }
                     q++;
                 }
+                if(q >= 3 || q <= 1){
+                    binary_flag = false;
+                }
+                if(q >= 1 || q == 1){
+                    noise_flag = true;
+                }
             }
 
             int center_two[4] = {0,0,0,0};
@@ -230,7 +240,7 @@ int main(int argc, char **argv)
             center_two[1] = ((ob_two[1] + wit_two[1]) / 2);
             center_two[0] = ((ob_two[0] + wit_two[0]) / 2);
 
-            if(center_two[0] > center_two[1]){
+            if(center_two[0] < center_two[1]){
                 int insted = center_two[1];
                 center_two[1] = center_two[0];
                 center_two[0] = insted;
@@ -238,13 +248,26 @@ int main(int argc, char **argv)
 
 
             if(mode == 4 || mode == 5){
-                msg.x = -1 * ((/*X_SIZE -*/ center_two[1]) - center_two[0]);
-                msg.y = y_object;
-            }else{
+                if(binary_flag == true){
+                    msg.x = -1 * ((X_SIZE/2 - center_two[1]) - center_two[0] + 50);
+                    msg.y = y_object;
+                    cout << "aaaaaaaaaa";
+                }else{
+                    msg.x = 5000;
+                    msg.y = 5000; 
+                }
+            }else if(noise_flag == false){
                 msg.x = x_center - 250;
                 msg.y = y_max_area - 250;
+                cout << "bbbbbbbbbbbbbbb";
+            }else{
+                msg.x = 5000;
+                msg.y = 5000;
+                cout << "ccccccccccccccccccc";
             }
 
+            cout << "0: " << center_two[0] << endl;
+            cout << "1: " << center_two[1] << endl;
 
             ros_camera_pub.publish(msg);
 
