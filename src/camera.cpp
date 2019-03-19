@@ -8,12 +8,12 @@
 #include <photo_odometry/cam_operator.h>
 
 #define GET_RANGE 2500
-#define X_ORIGIN 40
-#define Y_ORIGIN 0
-#define X_SIZE 500
-#define Y_SIZE 300
-#define FRAME_X_SIZE 500
-#define FRAME_Y_SIZE 300
+#define X_ORIGIN 0
+#define Y_ORIGIN 200
+#define X_SIZE 630
+#define Y_SIZE 250
+#define FRAME_X_SIZE 630
+#define FRAME_Y_SIZE 250
 //0 off,1 petbottle RED, ,2 petbottle BLUE ,feed 3
 using namespace cv;
 using namespace std;
@@ -92,7 +92,7 @@ int main(int argc, char **argv)
             Mat maindst(mainframe, Rect(X_ORIGIN, Y_ORIGIN, X_SIZE, Y_SIZE));
             resize(maindst, maindst, Size(FRAME_X_SIZE, FRAME_Y_SIZE));
             cvtColor(maindst, mainhsv, COLOR_BGR2HSV);
-            mode = 2;
+            mode = 4;
             switch (mode)
             {
                 case 0:
@@ -134,6 +134,7 @@ int main(int argc, char **argv)
                     c_range[3] = 15;
                     c_range[4] = 255;
                     c_range[5] = 255;
+                    break;
                 case 5:
                     c_range[0] = 105;
                     c_range[1] = 130;
@@ -141,6 +142,7 @@ int main(int argc, char **argv)
                     c_range[3] = 130;
                     c_range[4] = 255;
                     c_range[5] = 255;
+                    break;
             }
 
             inRange(mainhsv, Scalar(c_range[0], c_range[1], c_range[2]), Scalar(c_range[3], c_range[4], c_range[5]), maindst);
@@ -234,15 +236,15 @@ int main(int argc, char **argv)
                 center_two[0] = insted;
             }
 
-                
+
             if(mode == 4 || mode == 5){
-                msg.x = -1 * ((X_SIZE - center_two[1]) - center_two[0]);
+                msg.x = -1 * ((/*X_SIZE -*/ center_two[1]) - center_two[0]);
                 msg.y = y_object;
             }else{
                 msg.x = x_center - 250;
                 msg.y = y_max_area - 250;
-            }    
-            
+            }
+
 
             ros_camera_pub.publish(msg);
 
