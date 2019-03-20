@@ -92,7 +92,6 @@ int main(int argc, char **argv)
             Mat maindst(mainframe, Rect(X_ORIGIN, Y_ORIGIN, X_SIZE, Y_SIZE));
             resize(maindst, maindst, Size(FRAME_X_SIZE, FRAME_Y_SIZE));
             cvtColor(maindst, mainhsv, COLOR_BGR2HSV);
-            mode = 4;
             switch (mode)
             {
                 case 0:
