@@ -143,6 +143,9 @@ int main(int argc, char **argv)
                     c_range[4] = 255;
                     c_range[5] = 255;
                     break;
+                default:
+                    mode = 0;
+                    break;
             }
 
             inRange(mainhsv, Scalar(c_range[0], c_range[1], c_range[2]), Scalar(c_range[3], c_range[4], c_range[5]), maindst);
@@ -256,12 +259,12 @@ int main(int argc, char **argv)
                     msg.x = 5000;
                     msg.y = 5000; 
                 }
-            }else if(noise_flag == false){
-                msg.x = x_center - 250;
-                msg.y = y_max_area - 250;
-                cout << "bbbbbbbbbbbbbbb";
             }else if(mode == 0){
                 print("non data\n");
+            }else if (noise_flag == false){
+                    msg.x = x_center - 250;
+                    msg.y = y_max_area - 250;
+                    cout << "bbbbbbbbbbbbbbb";
             }else{
                 msg.x = 5000;
                 msg.y = 5000;
