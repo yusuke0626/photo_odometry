@@ -260,6 +260,8 @@ int main(int argc, char **argv)
                 msg.x = x_center - 250;
                 msg.y = y_max_area - 250;
                 cout << "bbbbbbbbbbbbbbb";
+            }else if(mode == 0){
+                print("non data\n");
             }else{
                 msg.x = 5000;
                 msg.y = 5000;
