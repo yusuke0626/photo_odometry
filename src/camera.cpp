@@ -260,7 +260,7 @@ int main(int argc, char **argv)
                     msg.y = 5000; 
                 }
             }else if(mode == 0){
-                print("non data\n");
+                printf("non data\n");
             }else if (noise_flag == false){
                     msg.x = x_center - 250;
                     msg.y = y_max_area - 250;
