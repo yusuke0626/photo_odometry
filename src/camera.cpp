@@ -57,11 +57,11 @@ int main(int argc, char **argv)
 
     Mat rec;
 
-    cout << "adjust color 0, not 1" << endl;
-    cin >> mode_sel;
+    //cout << "adjust color 0, not 1" << endl;
+    //cin >> mode_sel;
 
-    if (mode_sel == 0)
-        color_range_select();
+    //if (mode_sel == 0)
+        //color_range_select();
 
 
     VideoCapture cap(1);
@@ -281,7 +281,7 @@ int main(int argc, char **argv)
     return 0;
 }
 
-bool color_range_select(void)
+/*bool color_range_select(void)
 {
     VideoCapture cap(1);
     if (!cap.isOpened())
@@ -370,4 +370,4 @@ bool color_range_select(void)
     }
     destroyAllWindows();
     return true;
-}
+}*/
