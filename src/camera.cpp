@@ -60,8 +60,8 @@ int main(int argc, char **argv)
     //cout << "adjust color 0, not 1" << endl;
     //cin >> mode_sel;
 
-    //if (mode_sel == 0)
-        //color_range_select();
+    if (mode_sel == 0)
+        color_range_select();
 
 
     VideoCapture cap(1);
@@ -104,11 +104,11 @@ int main(int argc, char **argv)
                     break;
                 case 1: // red
                     c_range[0] = 0;
-                    c_range[1] = 150;
-                    c_range[2] = 100;
-                    c_range[3] = 15;
-                    c_range[4] = 255;
-                    c_range[5] = 255;
+                    c_range[1] = 114;
+                    c_range[2] = 67;
+                    c_range[3] = 6;
+                    c_range[4] = 247;
+                    c_range[5] = 158;
                     break;
                 case 2: // blue
                     c_range[0] = 105;
@@ -128,11 +128,11 @@ int main(int argc, char **argv)
                     break;
                 case 4:
                     c_range[0] = 0;
-                    c_range[1] = 150;
-                    c_range[2] = 100;
-                    c_range[3] = 15;
-                    c_range[4] = 255;
-                    c_range[5] = 255;
+                    c_range[1] = 114;
+                    c_range[2] = 67;
+                    c_range[3] = 6;
+                    c_range[4] = 247;
+                    c_range[5] = 158;
                     break;
                 case 5:
                     c_range[0] = 105;
@@ -149,7 +149,7 @@ int main(int argc, char **argv)
 
             inRange(mainhsv, Scalar(c_range[0], c_range[1], c_range[2]), Scalar(c_range[3], c_range[4], c_range[5]), maindst);
             erode(maindst, maindst, Mat(), Point(-1, -1), 3);
-            dilate(maindst, maindst, Mat(), Point(-1, -1), 5);
+            dilate(maindst, maindst, Mat(), Point(-1, -1), 6);
 
             //ラべリング
             Mat LabelImg;
@@ -264,7 +264,7 @@ int main(int argc, char **argv)
             }else if(mode == 1 || mode == 2 || mode == 3){
                 if (noise_flag == false)
                 {
-                    msg.x = x_center - 250;
+                    msg.x = x_center - 232;
                     msg.y = y_max_area - 250;
                     cout << "mode 1 or 2 or 3";
                 }else{
@@ -291,7 +291,7 @@ int main(int argc, char **argv)
     return 0;
 }
 
-/*bool color_range_select(void)
+bool color_range_select(void)
 {
     VideoCapture cap(1);
     if (!cap.isOpened())
@@ -380,4 +380,4 @@ int main(int argc, char **argv)
     }
     destroyAllWindows();
     return true;
-}*/
+}
