@@ -232,7 +232,7 @@ int main(int argc, char **argv)
                 if(q >= 3 || q <= 1){
                     binary_flag = false;
                 }
-                if(q >= 1){
+                if(q >= 2){
                     noise_flag = true;
                 }
             }
