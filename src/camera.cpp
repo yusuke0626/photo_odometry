@@ -253,26 +253,27 @@ int main(int argc, char **argv)
                 if(binary_flag == true){
                     msg.x = -1 * ((X_SIZE/2 - center_two[1]) - center_two[0] + 50);
                     msg.y = y_object;
-                    cout << "aaaaaaaaaa";
+                    cout << "mode 4 or 5";
                 }else{
                     msg.x = 5000;
-                    msg.y = 5000; 
+                    msg.y = 5000;
+                    cout << "noise in mode 4 or 5"; 
                 }
             }else if(mode == 0){
-                printf("non data\n");
-            }else if(mode == 1 || mode == 2){
+                cout << "camera mode off (mode == 0)";
+            }else if(mode == 1 || mode == 2 || mode == 3){
                 if (noise_flag == false)
                 {
                     msg.x = x_center - 250;
                     msg.y = y_max_area - 250;
-                    cout << "bbbbbbbbbbbbbbb";
+                    cout << "mode 1 or 2 or 3";
                 }else{
-                    cout << "abcdefg";
+                    cout << "noise in mode 1 or 2 or 3";
                 }
             }else{
                 msg.x = 5000;
                 msg.y = 5000;
-                cout << "ccccccccccccccccccc";
+                cout << "error";
             }
 
             cout << "0: " << center_two[0] << endl;
