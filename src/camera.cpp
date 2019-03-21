@@ -260,10 +260,13 @@ int main(int argc, char **argv)
                 }
             }else if(mode == 0){
                 printf("non data\n");
-            }else if (noise_flag == false){
+            }else if(mode == 1 || mode == 2){
+                if (noise_flag == false)
+                {
                     msg.x = x_center - 250;
                     msg.y = y_max_area - 250;
                     cout << "bbbbbbbbbbbbbbb";
+                }
             }else{
                 msg.x = 5000;
                 msg.y = 5000;
