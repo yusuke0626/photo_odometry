@@ -232,7 +232,7 @@ int main(int argc, char **argv)
                 if(q >= 3 || q <= 1){
                     binary_flag = false;
                 }
-                if(q >= 1 || q == 1){
+                if(q >= 1){
                     noise_flag = true;
                 }
             }
@@ -266,6 +266,8 @@ int main(int argc, char **argv)
                     msg.x = x_center - 250;
                     msg.y = y_max_area - 250;
                     cout << "bbbbbbbbbbbbbbb";
+                }else{
+                    cout << "abcdefg";
                 }
             }else{
                 msg.x = 5000;
