@@ -251,7 +251,7 @@ int main(int argc, char **argv)
 
             if(mode == 4 || mode == 5){
                 if(binary_flag == true){
-                    msg.x = -1 * ((X_SIZE/2 - center_two[1]) - center_two[0] + 50);
+                    msg.x = -1 * ((X_SIZE/2 - center_two[1]) - center_two[0]);
                     msg.y = y_object;
                     cout << "mode 4 or 5";
                 }else{
