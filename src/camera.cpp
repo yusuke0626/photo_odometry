@@ -7,7 +7,7 @@
 #include <photo_odometry/camera.h>
 #include <photo_odometry/cam_operator.h>
 
-#define GET_RANGE 2500
+#define GET_RANGE 2000
 #define X_ORIGIN 0
 #define Y_ORIGIN 200
 #define X_SIZE 640 //630
@@ -266,7 +266,7 @@ int main(int argc, char **argv)
             }else if(mode == 1 || mode == 2 || mode == 3){
                 if (noise_flag == false)
                 {
-                    msg.x = x_center - 320; //-232
+                    msg.x = x_center - 3; //-232
                     msg.y = y_max_area - 250;
                     cout << "mode 1 or 2 or 3";
                 }else{
