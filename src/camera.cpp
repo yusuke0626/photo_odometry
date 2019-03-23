@@ -9,11 +9,11 @@
 
 #define GET_RANGE 2000
 #define X_ORIGIN 0
-#define Y_ORIGIN 260
+#define Y_ORIGIN 300
 #define X_SIZE 640 //630
-#define Y_SIZE 220
+#define Y_SIZE 180
 #define FRAME_X_SIZE 640 //630
-#define FRAME_Y_SIZE 220
+#define FRAME_Y_SIZE 180
 //0 off,1 petbottle RED, ,2 petbottle BLUE ,feed 3
 using namespace cv;
 using namespace std;
@@ -266,7 +266,7 @@ int main(int argc, char **argv)
             }else if(mode == 1 || mode == 2 || mode == 3){
                 if (noise_flag == false)
                 {
-                    msg.x = x_center - 3; //-232
+                    msg.x = x_center - 232; //-232
                     msg.y = y_max_area - 250;
                     cout << "mode 1 or 2 or 3";
                 }else{
