@@ -266,7 +266,7 @@ int main(int argc, char **argv)
             }else if(mode == 1 || mode == 2 || mode == 3){
                 if (noise_flag == false)
                 {
-                    msg.x = x_center - 340; //-232
+                    msg.x = x_center - 320; //-232
                     msg.y = y_max_area - 250;
                     cout << "mode 1 or 2 or 3";
                 }else{
