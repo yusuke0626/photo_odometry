@@ -261,8 +261,8 @@ int main(int argc, char **argv)
                 }
             }else if(mode == 0){
                 cout << "camera mode off (mode == 0)";
-                msg.x = 0;
-                msg.y = 0;
+                //msg.x = 0;
+                //msg.y = 0;
             }else if(mode == 1 || mode == 2 || mode == 3){
                 if (noise_flag == false)
                 {
