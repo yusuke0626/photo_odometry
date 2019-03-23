@@ -11,9 +11,9 @@
 #define X_ORIGIN 0
 #define Y_ORIGIN 200
 #define X_SIZE 640 //630
-#define Y_SIZE 250
+#define Y_SIZE 280
 #define FRAME_X_SIZE 640 //630
-#define FRAME_Y_SIZE 250
+#define FRAME_Y_SIZE 280
 //0 off,1 petbottle RED, ,2 petbottle BLUE ,feed 3
 using namespace cv;
 using namespace std;
@@ -106,9 +106,9 @@ int main(int argc, char **argv)
                     c_range[0] = 0;
                     c_range[1] = 114;
                     c_range[2] = 67;
-                    c_range[3] = 6;
-                    c_range[4] = 247;
-                    c_range[5] = 158;
+                    c_range[3] = 198;
+                    c_range[4] = 256;
+                    c_range[5] = 156;
                     break;
                 case 2: // blue
                     c_range[0] = 105;
@@ -130,8 +130,8 @@ int main(int argc, char **argv)
                     c_range[0] = 0;
                     c_range[1] = 114;
                     c_range[2] = 67;
-                    c_range[3] = 6;
-                    c_range[4] = 247;
+                    c_range[3] = 198;
+                    c_range[4] = 256;
                     c_range[5] = 158;
                     break;
                 case 5:
