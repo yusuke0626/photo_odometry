@@ -9,11 +9,11 @@
 
 #define GET_RANGE 2000
 #define X_ORIGIN 0
-#define Y_ORIGIN 200
+#define Y_ORIGIN 260
 #define X_SIZE 640 //630
-#define Y_SIZE 280
+#define Y_SIZE 220
 #define FRAME_X_SIZE 640 //630
-#define FRAME_Y_SIZE 280
+#define FRAME_Y_SIZE 220
 //0 off,1 petbottle RED, ,2 petbottle BLUE ,feed 3
 using namespace cv;
 using namespace std;
