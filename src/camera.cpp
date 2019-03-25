@@ -57,8 +57,8 @@ int main(int argc, char **argv)
 
     Mat rec;
 
-    //cout << "adjust color 0, not 1" << endl;
-    //cin >> mode_sel;
+    cout << "adjust color 0, not 1" << endl;
+    cin >> mode_sel;
 
     if (mode_sel == 0)
         color_range_select();
@@ -104,8 +104,8 @@ int main(int argc, char **argv)
                     break;
                 case 1: // red
                     c_range[0] = 0;
-                    c_range[1] = 200;
-                    c_range[2] = 67;
+                    c_range[1] = 161;
+                    c_range[2] = 124;
                     c_range[3] = 198;
                     c_range[4] = 256;
                     c_range[5] = 256;
@@ -128,8 +128,8 @@ int main(int argc, char **argv)
                     break;
                 case 4:
                     c_range[0] = 0;
-                    c_range[1] = 200;
-                    c_range[2] = 67;
+                    c_range[1] = 161;
+                    c_range[2] = 124;
                     c_range[3] = 198;
                     c_range[4] = 256;
                     c_range[5] = 256;
@@ -146,6 +146,7 @@ int main(int argc, char **argv)
                     mode = 0;
                     break;
             }
+            mode = 4;
 
             inRange(mainhsv, Scalar(c_range[0], c_range[1], c_range[2]), Scalar(c_range[3], c_range[4], c_range[5]), maindst);
             erode(maindst, maindst, Mat(), Point(-1, -1), 3);
