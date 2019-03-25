@@ -230,12 +230,7 @@ int main(int argc, char **argv)
                     }
                     q++;
                 }
-                if(q >= 3 || q < 1){
-                    binary_flag = false;
-                }
-                if(q >= 2){
-                    noise_flag = true;
-                }
+                
             }
 
             int center_two[4] = {0,0,0,0};
@@ -249,6 +244,15 @@ int main(int argc, char **argv)
                 center_two[0] = insted;
             }
 
+            if (q >= 3 || q <= 1)
+            {
+                binary_flag = false;
+            }
+
+            if (q >= 2)
+            {
+                noise_flag = true;
+            }
 
             if(mode == 4 || mode == 5){
                 if(binary_flag == true){
