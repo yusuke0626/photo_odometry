@@ -57,8 +57,8 @@ int main(int argc, char **argv)
 
     Mat rec;
 
-    cout << "adjust color 0, not 1" << endl;
-    cin >> mode_sel;
+    //cout << "adjust color 0, not 1" << endl;
+    //cin >> mode_sel;
 
     if (mode_sel == 0)
         color_range_select();
@@ -146,7 +146,7 @@ int main(int argc, char **argv)
                     mode = 0;
                     break;
             }
-            mode = 4;
+            //mode = 4;
 
             inRange(mainhsv, Scalar(c_range[0], c_range[1], c_range[2]), Scalar(c_range[3], c_range[4], c_range[5]), maindst);
             erode(maindst, maindst, Mat(), Point(-1, -1), 3);
@@ -230,7 +230,7 @@ int main(int argc, char **argv)
                     }
                     q++;
                 }
-                if(q >= 3 || q <= 1){
+                if(q >= 3 || q < 1){
                     binary_flag = false;
                 }
                 if(q >= 2){
