@@ -104,11 +104,11 @@ int main(int argc, char **argv)
                     break;
                 case 1: // red
                     c_range[0] = 0;
-                    c_range[1] = 114;
+                    c_range[1] = 200;
                     c_range[2] = 67;
                     c_range[3] = 198;
                     c_range[4] = 256;
-                    c_range[5] = 156;
+                    c_range[5] = 256;
                     break;
                 case 2: // blue
                     c_range[0] = 105;
@@ -128,11 +128,11 @@ int main(int argc, char **argv)
                     break;
                 case 4:
                     c_range[0] = 0;
-                    c_range[1] = 114;
+                    c_range[1] = 200;
                     c_range[2] = 67;
                     c_range[3] = 198;
                     c_range[4] = 256;
-                    c_range[5] = 158;
+                    c_range[5] = 256;
                     break;
                 case 5:
                     c_range[0] = 105;
